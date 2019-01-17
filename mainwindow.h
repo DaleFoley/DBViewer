@@ -8,6 +8,7 @@
 #include <QListWidgetItem>
 #include <QMap>
 #include <QTableWidget>
+#include <stdexcept>
 
 #include "database.h"
 
@@ -25,13 +26,19 @@ namespace Ui
         ~MainWindow();
 
     private slots:
-        void on_actionOpen_triggered();
+        void on_actionOpenDatabase_triggered();
         void on_listDBTables_currentRowChanged(int currentRow);
+
+        void on_pushButtonExecuteQuery_clicked();
 
     private:
         Ui::MainWindow *ui;
 
+        const QString SQLQueryStatus = "SQL Query Status: ";
         QSharedPointer<database> currentDatabase;
+
+        void render_table(QSqlRecord recordToBeProcessed, QSqlQuery underlyingQuery);
+        void display_message(std::string msg);
 };
 
 #endif // MAINWINDOW_H

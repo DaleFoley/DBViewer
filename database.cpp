@@ -10,6 +10,6 @@ database::database(std::string databaseConnectionString)
     {
        QMessageBox message;
        message.setText("Failed to open database [" + QString::fromStdString(databaseConnectionString) + "] with error [" + OpenedDatabase.lastError().text() + "]");
-       message.show();
+       message.exec();
     }
 }
