@@ -21,9 +21,29 @@ void MainWindow::display_message(std::string msg)
     message.exec();
 }
 
+void MainWindow::process_row_change(QListWidget * listCollection, int currentRowIndex)
+{
+    this->ui->tableDBTableOutput->reset();
+
+    QString tableName = listCollection->item(currentRowIndex)->text();
+
+    if(this->currentDatabase != nullptr)
+    {
+        QSqlQuery selectTableData = this->currentDatabase.data()->OpenedDatabase.exec("select * from " + tableName);
+        this->render_table(selectTableData.record(), selectTableData);
+
+        if(selectTableData.isActive())
+        {
+            int rowsReturned = selectTableData.size();
+            this->ui->labelQueryStatus->setText("Number of rows returned [" + QString::number(rowsReturned) + "]");
+        }
+    }
+}
+
 void MainWindow::render_table(QSqlRecord recordToBeProcessed, QSqlQuery underlyingQuery)
 {
     QStringList columnNames;
+    
     int columnCount = recordToBeProcessed.count();
     for(int i = 0; i != columnCount; i++)
     {
@@ -63,12 +83,28 @@ void MainWindow::on_actionOpenDatabase_triggered()
         {
             QString pathToOpenedFile = fileDialog.selectedFiles().at(0);
             //std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DSN='';DBQ=" + pathToOpenedFile.toStdString();
-            std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Uid=Admin;Pwd=;ExtendedAnsiSQL=1;DBQ=" + pathToOpenedFile.toStdString();
+
+            QString pathWorkbookFile = QCoreApplication::applicationDirPath() + QDir::separator() + "System.mdw";
+            std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Uid=Admin;Pwd=;ExtendedAnsiSQL=1;DBQ=" + pathToOpenedFile.toStdString() + ";" +
+                    "SystemDB=" + pathWorkbookFile.toStdString();;
+
             this->currentDatabase = QSharedPointer<database>(new database(connectionString));
 
-            //Populate list with all tables in database
+            //Populate list with all tables in database and get queries as well.
             QStringList listOfTables = this->currentDatabase.data()->OpenedDatabase.tables(QSql::TableType::AllTables);
+            QStringList listOfQueries = this->currentDatabase->get_sql_queries();
+
+            this->ui->listDBTables->reset();
+            this->ui->listWidgetDBQueries->reset();
+
+            //Remove 'query' types so we can add them to a different list.
+            for(const QString &queryToBeRemoved: listOfQueries)
+            {
+                listOfTables.removeAll(queryToBeRemoved);
+            }
+
             this->ui->listDBTables->addItems(listOfTables);
+            this->ui->listWidgetDBQueries->addItems(listOfQueries);
         }
     }
     catch(const std::exception &ex)
@@ -80,17 +116,12 @@ void MainWindow::on_actionOpenDatabase_triggered()
 
 void MainWindow::on_listDBTables_currentRowChanged(int currentRow)
 {
-    //TODO: Save results to pointer, don't bother processing tables that have already been processed during runtime.
-    //QTableWidget copy constructor is private..how can we store already rendered tables??
-    this->ui->tableDBTableOutput->clear();
+    this->process_row_change(this->ui->listDBTables, currentRow);
+}
 
-    QString tableName = this->ui->listDBTables->item(currentRow)->text();
-
-    if(this->currentDatabase != nullptr)
-    {
-        QSqlQuery selectTableData = this->currentDatabase.data()->OpenedDatabase.exec("select * from " + tableName);
-        this->render_table(selectTableData.record(), selectTableData);
-    }
+void MainWindow::on_listWidgetDBQueries_currentRowChanged(int currentRow)
+{
+    this->process_row_change(this->ui->listWidgetDBQueries, currentRow);
 }
 
 void MainWindow::on_pushButtonExecuteQuery_clicked()
@@ -98,6 +129,34 @@ void MainWindow::on_pushButtonExecuteQuery_clicked()
     if(this->currentDatabase != nullptr)
     {
         QSqlQuery customQuery = this->currentDatabase.data()->OpenedDatabase.exec(this->ui->textEditQuery->toPlainText());
-        this->render_table(customQuery.record(), customQuery);
+        QSqlError queryError = customQuery.lastError();
+
+        if(queryError.isValid())
+        {
+            QMessageBox errorMessage;
+            errorMessage.setText("Encountered SQL Error [" + queryError.text() + "]");
+            errorMessage.setIcon(QMessageBox::Icon::Critical);
+            errorMessage.exec();
+
+            return;
+        }
+
+        if(customQuery.isActive())
+        {
+            int numberOfRowsAffected = 0;
+
+            if(customQuery.isSelect())
+            {
+                numberOfRowsAffected = customQuery.size();
+                this->ui->labelQueryStatus->setText("Number of rows returned [" + QString::number(numberOfRowsAffected) + "]");
+            }
+            else
+            {
+                numberOfRowsAffected = customQuery.numRowsAffected();
+                this->ui->labelQueryStatus->setText("Number of rows affected [" + QString::number(numberOfRowsAffected) + "]");
+            }
+
+            this->render_table(customQuery.record(), customQuery);
+        }
     }
 }

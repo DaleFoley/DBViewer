@@ -16,6 +16,8 @@ public:
     database();
     database(std::string databaseConnectionString);
 
+    QStringList get_sql_queries();
+
     QSqlDatabase OpenedDatabase;
 };
 
