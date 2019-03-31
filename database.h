@@ -9,6 +9,10 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QMessageBox>
+#include <QTextEdit>
+#include <QFileDialog>
+
+#include "settings.h"
 
 class database
 {
@@ -19,6 +23,12 @@ public:
     QStringList get_sql_queries();
 
     QSqlDatabase OpenedDatabase;
+
+    static void save_sql_query(QString sqlQueryTextToBeSaved);
+    static void load_sql_query(QTextEdit * textEditWidgetToLoadSQLInto);
+
+private:
+    static void set_default_filedialog_dir(QFileDialog * dialogToSetDefaultDir);
 };
 
 
