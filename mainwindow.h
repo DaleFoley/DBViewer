@@ -28,10 +28,10 @@ namespace Ui
     private slots:
         void on_actionOpenDatabase_triggered();
         void on_listDBTables_currentRowChanged(int currentRow);
-
         void on_pushButtonExecuteQuery_clicked();
-
         void on_listWidgetDBQueries_currentRowChanged(int currentRow);
+        void on_pushButtonSaveQuery_clicked();
+        void on_pushButtonLoadQuery_clicked();
 
     private:
         Ui::MainWindow *ui;

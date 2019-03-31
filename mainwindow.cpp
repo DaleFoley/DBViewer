@@ -6,7 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
+
+    settings::PathApplication = QCoreApplication::applicationDirPath();
 }
 
 MainWindow::~MainWindow()
@@ -84,7 +86,7 @@ void MainWindow::on_actionOpenDatabase_triggered()
             QString pathToOpenedFile = fileDialog.selectedFiles().at(0);
             //std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DSN='';DBQ=" + pathToOpenedFile.toStdString();
 
-            QString pathWorkbookFile = QCoreApplication::applicationDirPath() + QDir::separator() + "System.mdw";
+            QString pathWorkbookFile = settings::PathApplication + QDir::separator() + "System.mdw";
             std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Uid=Admin;Pwd=;ExtendedAnsiSQL=1;DBQ=" + pathToOpenedFile.toStdString() + ";" +
                     "SystemDB=" + pathWorkbookFile.toStdString();;
 
@@ -158,5 +160,43 @@ void MainWindow::on_pushButtonExecuteQuery_clicked()
 
             this->render_table(customQuery.record(), customQuery);
         }
+    }
+}
+
+void MainWindow::on_pushButtonSaveQuery_clicked()
+{
+    try
+    {
+        QString sqlQueryTextToSave = this->ui->textEditQuery->toPlainText();
+        if(sqlQueryTextToSave == "")
+        {
+            QMessageBox emptySQLText;
+            emptySQLText.setText("Require SQL text to save.");
+            emptySQLText.setIcon(QMessageBox::Icon::Information);
+            emptySQLText.setModal(true);
+            emptySQLText.exec();
+        }
+        else
+        {
+            database::save_sql_query(this->ui->textEditQuery->toPlainText());
+        }
+    }
+    catch(const std::exception &ex)
+    {
+        std::string errorMessage("Encountered error [" + std::string(ex.what()) + "]");
+        this->display_message(errorMessage);
+    }
+}
+
+void MainWindow::on_pushButtonLoadQuery_clicked()
+{
+    try
+    {
+        database::load_sql_query(this->ui->textEditQuery);
+    }
+    catch (const std::exception &ex)
+    {
+        std::string errorMessage("Encountered error [" + std::string(ex.what()) + "]");
+        this->display_message(errorMessage);
     }
 }

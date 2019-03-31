@@ -26,8 +26,33 @@
       <property name="title">
        <string>SQL Query:</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
-       <item row="1" column="0">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0">
+       <item row="0" column="0" colspan="5">
+        <widget class="QTextEdit" name="textEditQuery">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="acceptRichText">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -37,13 +62,13 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>120</width>
+           <width>150</width>
            <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item row="1" column="1">
+       <item row="3" column="2">
         <widget class="QPushButton" name="pushButtonSaveQuery">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -68,7 +93,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="3" column="4">
         <widget class="QPushButton" name="pushButtonExecuteQuery">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -93,28 +118,29 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QTextEdit" name="textEditQuery">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pushButtonLoadQuery">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>16777215</width>
-           <height>30</height>
+           <width>115</width>
+           <height>25</height>
           </size>
          </property>
-         <property name="acceptRichText">
-          <bool>false</bool>
+         <property name="text">
+          <string>Load Query</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
         </widget>
        </item>
