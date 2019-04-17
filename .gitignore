@@ -48,3 +48,4 @@ CMakeLists.txt.user*
 *.mdw
 *.mdb.bak
 .vscode
+*.code-workspace
