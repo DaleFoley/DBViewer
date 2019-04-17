@@ -8,9 +8,7 @@ database::database(std::string databaseConnectionString)
 
     if(!OpenedDatabase.open())
     {
-       QMessageBox message;
-       message.setText("Failed to open database [" + QString::fromStdString(databaseConnectionString) + "] with error [" + OpenedDatabase.lastError().text() + "]");
-       message.exec();
+        throw "Failed to open database [" + QString::fromStdString(databaseConnectionString) + "] with error [" + OpenedDatabase.lastError().text() + "]";
     }
 }
 
@@ -25,12 +23,7 @@ QStringList database::get_sql_queries()
 
     if(queryError.isValid())
     {
-        QMessageBox errorMessage;
-        errorMessage.setText("Encountered SQL Error [" + queryError.text() + "]");
-        errorMessage.setIcon(QMessageBox::Icon::Critical);
-        errorMessage.exec();
-
-        return rtnSqlQueries;
+        throw "Encountered SQL Error [" + queryError.text() + "]";
     }
 
     while(sqlQuery.next())
@@ -105,4 +98,14 @@ void database::load_sql_query(QTextEdit * textEditWidgetToLoadSQLInto)
 
         textEditWidgetToLoadSQLInto->setPlainText(dataRead);
     }
+}
+
+void database::load_tables()
+{
+    this->tables = this->OpenedDatabase.tables(QSql::TableType::AllTables);
+}
+
+void database::load_queries()
+{
+    this->queries = this->get_sql_queries();
 }

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 //TODO: Error handling.
+//TODO: Is database open check/locked?
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -84,7 +85,6 @@ void MainWindow::on_actionOpenDatabase_triggered()
         if(fileDialog.exec())
         {
             QString pathToOpenedFile = fileDialog.selectedFiles().at(0);
-            //std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DSN='';DBQ=" + pathToOpenedFile.toStdString();
 
             QString pathWorkbookFile = settings::PathApplication + QDir::separator() + "System.mdw";
             std::string connectionString = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Uid=Admin;Pwd=;ExtendedAnsiSQL=1;DBQ=" + pathToOpenedFile.toStdString() + ";" +
@@ -93,20 +93,14 @@ void MainWindow::on_actionOpenDatabase_triggered()
             this->currentDatabase = QSharedPointer<database>(new database(connectionString));
 
             //Populate list with all tables in database and get queries as well.
-            QStringList listOfTables = this->currentDatabase.data()->OpenedDatabase.tables(QSql::TableType::AllTables);
-            QStringList listOfQueries = this->currentDatabase->get_sql_queries();
+            this->currentDatabase->load_tables();
+            this->currentDatabase->load_queries();
 
             this->ui->listDBTables->reset();
             this->ui->listWidgetDBQueries->reset();
 
-            //Remove 'query' types so we can add them to a different list.
-            for(const QString &queryToBeRemoved: listOfQueries)
-            {
-                listOfTables.removeAll(queryToBeRemoved);
-            }
-
-            this->ui->listDBTables->addItems(listOfTables);
-            this->ui->listWidgetDBQueries->addItems(listOfQueries);
+            this->ui->listDBTables->addItems(this->currentDatabase->tables);
+            this->ui->listWidgetDBQueries->addItems(this->currentDatabase->queries);
         }
     }
     catch(const std::exception &ex)
@@ -199,4 +193,15 @@ void MainWindow::on_pushButtonLoadQuery_clicked()
         std::string errorMessage("Encountered error [" + std::string(ex.what()) + "]");
         this->display_message(errorMessage);
     }
+}
+
+void MainWindow::on_actionDesign_View_triggered()
+{
+    if(this->currentDatabase == nullptr){return;}
+
+    DesignSelection designSelection(this);
+    designSelection.currentDatabase = this->currentDatabase;
+
+    designSelection.setModal(true);
+    designSelection.exec();
 }

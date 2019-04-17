@@ -27,6 +27,11 @@ public:
     static void save_sql_query(QString sqlQueryTextToBeSaved);
     static void load_sql_query(QTextEdit * textEditWidgetToLoadSQLInto);
 
+    void load_tables();
+    void load_queries();
+
+    QStringList tables;
+    QStringList queries;
 private:
     static void set_default_filedialog_dir(QFileDialog * dialogToSetDefaultDir);
 };

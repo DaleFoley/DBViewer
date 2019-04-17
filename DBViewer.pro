@@ -27,15 +27,25 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     database.cpp \
-    settings.cpp
+    settings.cpp \
+    designselection.cpp \
+    designview.cpp \
+    tableerdwidget.cpp \
+    tablecolumn.cpp
 
 HEADERS += \
         mainwindow.h \
     database.h \
-    settings.h
+    settings.h \
+    designselection.h \
+    designview.h \
+    tableerdwidget.h \
+    tablecolumn.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    designselection.ui \
+    designview.ui
 
 RESOURCES += \
     icons.qrc

@@ -3,11 +3,20 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QLabel>
 
 class tableColumn : public QLabel
 {
 public:
-    tableColumn();
+    explicit tableColumn(QWidget * parent=Q_NULLPTR, Qt::WindowFlags f=Qt::WindowFlags());
+
+    bool isPrimaryKey;
+    bool isForeignKey;
+
+protected:
+    void enterEvent(QEvent *) override;
+    void leaveEvent(QEvent *) override;
+
 };
 
 #endif // TABLECOLUMN_H

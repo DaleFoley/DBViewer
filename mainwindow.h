@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 #include "database.h"
+#include "designselection.h"
 
 namespace Ui
 {
@@ -32,6 +33,8 @@ namespace Ui
         void on_listWidgetDBQueries_currentRowChanged(int currentRow);
         void on_pushButtonSaveQuery_clicked();
         void on_pushButtonLoadQuery_clicked();
+
+        void on_actionDesign_View_triggered();
 
     private:
         Ui::MainWindow *ui;
