@@ -45,6 +45,7 @@ CMakeLists.txt.user*
 
 *.accdb
 *.laccd
+*.ldb
 *.mdb
 *.mdw
 *.mdb.bak

@@ -15,7 +15,7 @@ class DesignView : public QDialog
     Q_OBJECT
 
 public:
-    explicit DesignView(QWidget *parent = nullptr);
+    explicit DesignView(QWidget * parent = nullptr);
     ~DesignView();
 
     QSharedPointer<database> currentDatabase;
@@ -31,7 +31,11 @@ private slots:
     void on_pushButtonClose_clicked();
 
 private:
+    int stackMultiplier;
+
     Ui::DesignView * ui;
+
+    void create_erd_widget(const QString &tableName, QVector<QString> columns, int &offsetX, int &offsetY);
 };
 
 #endif // DESIGNVIEW_H

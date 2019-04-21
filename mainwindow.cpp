@@ -33,7 +33,9 @@ void MainWindow::process_row_change(QListWidget * listCollection, int currentRow
     if(this->currentDatabase != nullptr)
     {
         QSqlQuery selectTableData = this->currentDatabase.data()->OpenedDatabase.exec("select * from " + tableName);
-        this->render_table(selectTableData.record(), selectTableData);
+        QSqlRecord selectedRecord = this->currentDatabase.data()->OpenedDatabase.record(tableName);
+
+        this->render_table(selectedRecord, selectTableData);
 
         if(selectTableData.isActive())
         {
@@ -46,7 +48,7 @@ void MainWindow::process_row_change(QListWidget * listCollection, int currentRow
 void MainWindow::render_table(QSqlRecord recordToBeProcessed, QSqlQuery underlyingQuery)
 {
     QStringList columnNames;
-    
+
     int columnCount = recordToBeProcessed.count();
     for(int i = 0; i != columnCount; i++)
     {

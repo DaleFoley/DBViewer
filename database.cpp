@@ -102,7 +102,8 @@ void database::load_sql_query(QTextEdit * textEditWidgetToLoadSQLInto)
 
 void database::load_tables()
 {
-    this->tables = this->OpenedDatabase.tables(QSql::TableType::AllTables);
+    //TODO: Handle views as well.
+    this->tables = this->OpenedDatabase.tables(QSql::TableType::Tables);
 }
 
 void database::load_queries()

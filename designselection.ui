@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DesignSelection</class>
  <widget class="QDialog" name="DesignSelection">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +20,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Design Selection</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -35,7 +38,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabTables">
       <attribute name="title">
@@ -57,7 +60,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QListWidget" name="listWidgetQueries"/>
+        <widget class="QListWidget" name="listWidgetQueries">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -106,7 +113,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Add</string>
+         <string>OK</string>
         </property>
        </widget>
       </item>

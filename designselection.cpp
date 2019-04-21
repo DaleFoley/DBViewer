@@ -22,7 +22,6 @@ void DesignSelection::showEvent(QShowEvent * event)
         this->ui->listWidgetTables->addItems(this->currentDatabase->tables);
         this->ui->listWidgetQueries->addItems(this->currentDatabase->queries);
     }
-
 }
 
 void DesignSelection::on_pushButtonCancel_clicked()
@@ -36,14 +35,22 @@ void DesignSelection::on_pushButtonAdd_clicked()
     designView.currentDatabase = this->currentDatabase;
 
     QStringList selectedTableItems;
-    for(QListWidgetItem * selectedTableItem : this->ui->listWidgetTables->selectedItems())
+    QList<QListWidgetItem *> selectedWidgetTableItems = this->ui->listWidgetTables->selectedItems();
+    for(QListWidgetItem * selectedTableItem : selectedWidgetTableItems)
     {
         selectedTableItems.append(selectedTableItem->text());
     }
 
+    QStringList selectedQueryItems;
+    QList<QListWidgetItem *> selectedWidgetQueryItems = this->ui->listWidgetQueries->selectedItems();
+    for(QListWidgetItem * selectedQueryItem : selectedWidgetQueryItems)
+    {
+        selectedQueryItems.append(selectedQueryItem->text());
+    }
+
     designView.tables = selectedTableItems;
+    designView.queries = selectedQueryItems;
 
     designView.setModal(true);
     designView.exec();
-
 }
