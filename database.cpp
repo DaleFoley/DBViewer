@@ -110,3 +110,18 @@ void database::load_queries()
 {
     this->queries = this->get_sql_queries();
 }
+
+QVector<QString> database::get_table_primarykeys(const QString tableName)
+{
+    QSqlIndex primaryKeyIndex = this->OpenedDatabase.primaryIndex(tableName);
+
+    //Get a vector of primary key columns.
+    QVector<QString> primaryKeyColumnNames;
+    int primaryKeyColumnCount = primaryKeyIndex.count();
+    for(int idx = 0; idx != primaryKeyColumnCount; idx++)
+    {
+        primaryKeyColumnNames.push_back(primaryKeyIndex.fieldName(idx));
+    }
+
+    return primaryKeyColumnNames;
+}

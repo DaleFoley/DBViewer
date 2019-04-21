@@ -25,17 +25,20 @@ public:
 
     QVector<TableERDWidget *> renderedERDWidgets;
 protected slots:
-    void showEvent(QShowEvent * event);
+    void showEvent(QShowEvent *);
+    void resizeEvent(QResizeEvent *);
 
 private slots:
     void on_pushButtonClose_clicked();
 
 private:
     int stackMultiplier;
+    int height;
+    int width;
 
     Ui::DesignView * ui;
 
-    void create_erd_widget(const QString &tableName, QVector<QString> columns, int &offsetX, int &offsetY);
+    void create_erd_widget(const QString &tableName, QVector<QString> columns, int &offsetX, int &offsetY, QVector<QString> primarKeyColumns);
 };
 
 #endif // DESIGNVIEW_H

@@ -8,6 +8,8 @@
 #include <QtSql/QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QSqlField>
+#include <QSqlIndex>
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QFileDialog>
@@ -29,6 +31,8 @@ public:
 
     void load_tables();
     void load_queries();
+
+    QVector<QString> get_table_primarykeys(const QString tableName);
 
     QStringList tables;
     QStringList queries;
